@@ -1,0 +1,15 @@
+services:
+  app:
+    build: .
+    ports:
+      - "${SERVER_PORT:-8080}:8080"
+    env_file:
+      - .env
+    environment:
+      TZ: Asia/Seoul
+    volumes:
+      - gongmodoc_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  gongmodoc_data:

@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: SilverRoom
+  datasource:
+    url: jdbc:h2:file:${APP_DATA_DIR:./data}/gongmodoc;MODE=LEGACY;DATABASE_TO_UPPER=false
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  sql:
+    init:
+      mode: always
+      continue-on-error: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
+
+server:
+  port: ${SERVER_PORT:8080}
+
+app:
+  access-code: ${APP_ACCESS_CODE:1234}
+  upload:
+    max-size-bytes: 2097152

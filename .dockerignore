@@ -1,0 +1,9 @@
+.gradle
+build
+data
+data-test
+.env
+.git
+.idea
+.vscode
+*.log

@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SilverRoom</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css?v=20260623-16">
+    <script defer src="/app.js?v=20260623-16"></script>
+</head>
+<body>
+<main id="loginView" class="login-shell">
+    <div class="login-overlay"></div>
+    <section class="floating-preview preview-document">
+        <div class="preview-kicker">Document Preview</div>
+        <div class="preview-line wide"></div>
+        <div class="preview-line"></div>
+        <div class="preview-line short"></div>
+    </section>
+    <section class="floating-preview preview-comment">
+        <div class="bubble-author">Review note</div>
+        <p>문맥은 그대로, 의견은 한곳에.</p>
+    </section>
+    <section class="login-panel">
+        <p class="eyebrow">Private Review Room</p>
+        <h1 class="brand-logo"><span>Silver</span><span class="brand-view">Room</span></h1>
+        <p class="login-copy">작성은 익숙한 도구에서, 검토는 SilverRoom에서.</p>
+        <p class="login-subcopy">내가 쓰려고 만든 왕왕 쩌는 웹뷰어</p>
+        <form id="loginForm" class="login-form">
+            <label>
+                입장 코드
+                <input id="accessCodeInput" type="password" inputmode="numeric" autocomplete="current-password" required>
+            </label>
+            <label>
+                닉네임
+                <select id="nicknameInput" required>
+                    <option value="">닉네임을 선택하세요</option>
+                    <option value="지은">지은</option>
+                    <option value="영연">영연</option>
+                </select>
+            </label>
+            <button type="submit">Enter Viewer</button>
+            <p id="loginError" class="error-text" role="alert"></p>
+        </form>
+    </section>
+    <div class="tech-stack" aria-label="사용 기술">
+        <span class="tech-icon spring-icon" title="Spring Boot" aria-label="Spring Boot">
+            <img src="https://cdn.simpleicons.org/springboot/6DB33F" alt="Spring Boot">
+        </span>
+        <span class="tech-icon js-icon" title="JavaScript" aria-label="JavaScript">
+            <img src="https://cdn.simpleicons.org/javascript/F7DF1E" alt="JavaScript">
+        </span>
+    </div>
+    <a class="github-link" href="https://github.com/cora1022/SilverRoom" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2.2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.9c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.6 1 1.6 1 .9 1.5 2.3 1.1 2.8.8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-4.9 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .9-.3 2.8 1a9.5 9.5 0 0 1 5.1 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.7.7 1 1.6 1 2.7 0 3.8-2.3 4.6-4.6 4.9.4.3.7 1 .7 2v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2.2Z"/>
+        </svg>
+    </a>
+</main>
+
+<main id="appView" class="app-shell hidden">
+    <header class="topbar">
+        <div>
+            <h1 id="appBrandLogo" class="brand-logo app-brand-logo" role="button" tabindex="0" title="현재 문서로 돌아가기"><span>Silver</span><span class="brand-view">Room</span></h1>
+            <p id="viewerStatus">아직 업로드된 문서가 없습니다.</p>
+        </div>
+        <div class="topbar-actions">
+            <span id="nicknameBadge" class="nickname-badge"></span>
+            <input id="fileInput" type="file" accept=".txt,.text,.md" hidden>
+            <button id="openWriterButton" type="button" class="secondary">빠른 텍스트 추가</button>
+            <button id="editWriterButton" type="button" disabled>글 수정</button>
+            <button id="uploadButton" type="button">파일 업로드</button>
+            <button id="downloadTxtButton" type="button">다운로드</button>
+            <button id="logoutButton" type="button" class="secondary">로그아웃</button>
+        </div>
+    </header>
+
+    <section class="workspace">
+        <article class="document-area">
+            <div id="previousNotice" class="notice hidden">이전 파일을 보고 있습니다. 현재 문서로 복원하려면 복원 버튼을 누르세요.</div>
+            <div id="pageControls" class="page-controls hidden">
+                <label>
+                    페이지 줄 수
+                    <select id="linesPerPageSelect">
+                        <option value="50">50줄</option>
+                        <option value="100">100줄</option>
+                        <option value="200">200줄</option>
+                    </select>
+                </label>
+                <span id="pageIndicator" class="page-indicator">1 / 1</span>
+            </div>
+            <div id="documentCard" class="document-card empty">
+                <p>아직 업로드된 문서가 없습니다.</p>
+            </div>
+            <div id="pageNav" class="page-nav hidden">
+                <button id="prevPageButton" type="button" class="secondary">← 이전 페이지</button>
+                <span id="pageNavIndicator">1 / 1</span>
+                <button id="nextPageButton" type="button">다음 페이지 →</button>
+            </div>
+        </article>
+
+        <aside class="comment-panel">
+            <div class="comment-header">
+                <div>
+                    <h2>댓글</h2>
+                    <p id="commentFileName">파일을 선택하면 댓글을 볼 수 있습니다.</p>
+                </div>
+            </div>
+            <div id="commentList" class="comment-list"></div>
+            <form id="commentForm" class="comment-form">
+                <select id="commentTagInput" aria-label="댓글 태그">
+                    <option value="NONE">기본</option>
+                    <option value="CHANGE_REQUEST">수정요청</option>
+                    <option value="IDEA">아이디어</option>
+                    <option value="NEEDS_CHECK">확인필요</option>
+                </select>
+                <textarea id="commentInput" rows="3" placeholder="댓글을 입력하세요."></textarea>
+                <button type="submit">댓글 작성</button>
+            </form>
+        </aside>
+    </section>
+
+    <section class="history-section">
+        <div class="section-title">
+            <h2>이전 업로드 파일 목록</h2>
+            <p>새 파일을 업로드하면 현재 문서는 파일 히스토리로 보관됩니다.</p>
+        </div>
+        <div id="historyList" class="history-list"></div>
+    </section>
+</main>
+
+<div id="writerModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="writerTitle">
+    <section class="writer-modal">
+        <div class="writer-modal-header">
+            <div>
+                <p id="writerEyebrow" class="eyebrow">Quick Text</p>
+                <h2 id="writerTitle">빠른 텍스트 추가</h2>
+            </div>
+            <button id="closeWriterButton" type="button" class="icon-button" aria-label="닫기">×</button>
+        </div>
+
+        <form id="writerForm" class="writer-form">
+            <div class="writer-fields">
+                <label>
+                    파일명
+                    <input id="writerFileName" type="text" placeholder="예: review_note_v1" maxlength="80" required>
+                </label>
+                <label>
+                    형식
+                    <input id="writerFileTypeLabel" type="text" value="Text (.txt)" disabled>
+                </label>
+            </div>
+
+            <div class="writer-layout">
+                <label class="writer-editor-wrap">
+                    작성 내용
+                    <textarea id="writerContent" class="writer-editor" placeholder="// 이 줄은 연한 보라색 주석으로 보입니다.&#10;제목&#10;본문을 작성하세요." required></textarea>
+                </label>
+                <div class="writer-preview-wrap">
+                    <div class="writer-preview-title">미리보기</div>
+                    <div id="writerPreview" class="document-card writer-preview empty">
+                        <p>작성 내용을 입력하면 미리보기가 표시됩니다.</p>
+                    </div>
+                </div>
+            </div>
+
+            <p class="writer-help">줄 앞에 <code>//</code>를 입력하면 문서 뷰어에서 연한 보라색 주석으로 표시됩니다.</p>
+
+            <div class="writer-actions">
+                <button id="saveWriterButton" type="submit">현재 문서로 저장</button>
+                <button id="cancelWriterButton" type="button" class="secondary">취소</button>
+            </div>
+        </form>
+    </section>
+</div>
+</body>
+</html>
